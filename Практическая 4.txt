@@ -1,0 +1,115 @@
+Create database Primers
+go
+USE Primers
+go
+Create table Товар(
+КодТовара INT Identity(1,1),
+Название Varchar(50),
+Цена Money,
+Тип Varchar(50),
+Сорт Varchar(50),
+Город Varchar(50),
+Остаток Int);
+go
+Create table Товар1(
+КодТовара INT Identity(1,1) primary key,
+Название Varchar(50),
+Цена Money,
+Тип Varchar(50),
+Сорт Varchar(50),
+Город Varchar(50),
+Остаток Int);
+go
+Create table Сотрудники(
+Фамилия Char(10),
+Имя Char(10),
+Город Char(10),
+primary key(Фамилия,Имя));
+go
+Create table Сотрудники1(
+Фамилия Char(10),
+Имя Char(10),
+Город Char(10),
+Должность Char(10)Not null,
+primary key(Фамилия,Имя));
+go
+Create table Сотрудники2(
+Фамилия Char(10)Not null Unique,
+Имя Char(10)Not null Unique,
+Город Char(10),
+Должность Char(10)Not null,
+primary key(Фамилия,Имя));
+go
+Create table Сотрудники3(
+Фамилия Char(10)Not null Unique,
+Имя Char(10)Not null Unique,
+Город Char(10)Default 'Москва',
+Должность Char(10)Not null,
+primary key(Фамилия,Имя));
+go
+Create table Продавцы (
+КодПродавцы integer Not null Primary key,
+Фамилия Char(10)Not null Unique,
+Город Char(10),
+CHECK (Город IN('Лондон','Барселона','Сан Хосе','Нью Йорк')));
+go
+Create table Продавцы2 (
+КодПродавцы integer Not null Primary key,
+Фамилия Char(10)Not null Unique,
+Город Char(10),
+Комиссионные decimal,
+CHECK (Комиссионные<0/15 OR Город='Барселона'));
+go
+Create table Продавцы3 (
+КодПродавцы integer Not null Primary key,
+Фамилия Char(10)Not null Unique,
+Город Char(10),
+Комиссионные decimal CHECK (Комиссионные<1));
+go
+Create table Клиент(
+КодКлиента INT Identity(1,1) primary key,
+Фирма Varchar(50) Not null,
+Фамилия Varchar(50) Not null,
+Город Varchar(50) Not null,
+Телефон Сhar(10) Not null,
+CHECK (Телефон LIKE '[1-9][0-9]-[0-9][0-9]-[0-9][0-9]'));
+go
+Create table Сделка(
+КодСделка INT Identity(1,1) primary key,
+КодТовара INT Not null,
+КодКлиента INT Not null,
+Количество INT Not null Default Getdate 0,
+Остаток INT,
+Constraint fk_Товар Foreign Key(КодТовара) References Товар,
+Constraint fk_ТКлиент Foreign Key(КодКлиента) References Клиент,);
+go
+Alter Table Сделка Drop Constraint fk_Товар
+go
+Alter Table Сделка ADD Constraint fk_Товар
+Foreign Key (КодТовара) References Товар
+On Update Cascade on Delete Cascade
+go
+Alter Table Товар ADD НалогAS Цена * 0.05
+go
+Alter Table Товар Drop Column Остаток
+go
+[Преподователи]
+Create table TEACHER
+(KOD_TEACHER INT PRIMARY KEY not null,
+KOD_KAFEDRU int FOREIGN KEY References STUDENT(KOD_KAFEDRU) not null,
+NAME_TEACHER varchar(100),
+INDEF_KOD int unique not null,
+DOLGNOST varchar(100) check (DOLGNOST IN ('профессор '));
+go
+[Студент]
+Create table  STUDENT
+(STUDENT_ID INT PRIMARY KEY not null,
+SUTNAME varchar(100) not null,
+SUTFNAME varchar(100) not null,
+STIPEND money check (STIPEND<500),
+KURS int check ( KURS <=1 or KURS >=5 ) not null,
+CITY varchar(50) not null,
+BIRTHDAY datetime not null,
+[GROUP] varchar(20) not null,
+KOD_KAFEDRU int foreign key references TEACHER(KOD_KAFEDRU) not null,
+)
